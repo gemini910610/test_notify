@@ -11,10 +11,10 @@ class handler(BaseHTTPRequestHandler):
         self.wfile.write(self.path.encode('utf-8'))
         return
     def do_POST(self):
-        length = self.headers['content-length']
+        length = int(self.headers['content-length'])
         data = self.rfile.read(length)
         data = parse_qs(data.decode())
-        
+
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
         self.end_headers()
