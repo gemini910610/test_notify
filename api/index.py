@@ -41,14 +41,6 @@ class handler(BaseHTTPRequestHandler):
             return
         access_token = response.json()['access_token']
 
-        access_tokens = {}
-        if os.path.exists('access_tokens.json'):
-            with open('access_tokens.json', 'r') as file:
-                access_tokens = json.load(file)
-        access_tokens[state] = access_token
-        with open('access_tokens.json', 'w') as file:
-            json.dump(access_tokens, file, ensure_ascii=False)
-
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
         self.end_headers()
