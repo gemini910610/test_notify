@@ -2,6 +2,7 @@ from http.server import BaseHTTPRequestHandler
 import json
 from urllib.parse import parse_qs
 import requests
+import os
 
 class handler(BaseHTTPRequestHandler):
 
@@ -39,6 +40,14 @@ class handler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(response.json(), ensure_ascii=False).encode('utf-8'))
             return
         access_token = response.json()['access_token']
+
+        access_tokens = {}
+        if os.path.exists('access_tokens.json'):
+            with open('access_tokens.json', 'r') as file:
+                access_tokens = json.load(file)
+        access_tokens[state] = access_token
+        with open('access_tokens.json', 'w') as file:
+            json.dump(access_tokens, file, ensure_ascii=False)
 
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
