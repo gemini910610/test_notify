@@ -32,14 +32,18 @@ class handler(BaseHTTPRequestHandler):
         }
 
         response = requests.post(url, headers=headers, params=parameters)
-        print(response.json())
+        if response.status_code != 200:
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps(response.json(), ensure_ascii=False).encode('utf-8'))
+            return
+        access_token = response.json()['access_token']
 
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
         self.end_headers()
-        self.wfile.write(json.dumps(data, ensure_ascii=False).encode('utf-8'))
-
-        # https://notify-bot.line.me/oauth/token?client_secret=A4vmKub5z4Ssf2tQA25B7GBXrZN7jND3EJiOgwjApMo
-        # access_token
-
-        # https://notify-bot.line.me/oauth/authorize?response_type=code&scope=notify&response_mode=form_post&state=%E7%B9%BC%E8%80%80&client_id=YaGCpDUilyJVMV4FvvppWm&redirect_uri=https://test-notify-xi.vercel.app/api
+        self.wfile.write(json.dumps({
+            'state': state,
+            'access_token': access_token
+        }, ensure_ascii=False).encode('utf-8'))
