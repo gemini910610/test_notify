@@ -31,8 +31,8 @@ class handler(BaseHTTPRequestHandler):
             'client_secret': 'A4vmKub5z4Ssf2tQA25B7GBXrZN7jND3EJiOgwjApMo'
         }
 
-        response = requests.get(url, headers=headers, params=parameters)
-        print(response.json)
+        response = requests.post(url, headers=headers, params=parameters)
+        print(response.json())
 
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
